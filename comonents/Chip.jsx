@@ -16,6 +16,8 @@ export default function Chip({title, subtitle}) {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 10,
+        marginBottom: 10,
         display: 'flex',
         flexDirection: 'row',
         backgroundColor: '#E9E9E9',

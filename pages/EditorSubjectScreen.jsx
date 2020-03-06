@@ -1,22 +1,48 @@
-import React from 'react'
-import {View, Text, TextInput, Button} from 'react-native'
+import React, {useState} from 'react'
+import { View, TextInput, Text, Button } from "react-native";
 import { connect } from "react-redux";
+import { addSubjectActionCreator } from "../store/subjects/actions";
+import t from 'tcomb-form-native'
 
-function EditorSubjectScreen({}) {
+const Form = t.form.Form
+
+function EditorSubjectScreen({addSubject}) {
+    const options = {
+        fields: {
+            subjectName: {
+                label: 'Nombre de asignatura'
+            },
+            teacherName: {
+                label: 'Nombre profesor'
+            }
+        }
+    }
+    const Subject = t.struct({
+        subjectName: t.String,
+        teacherName: t.String
+    })
+
+    let formData
+
+    const handleSubmit = () => {
+        const {subjectName, teacherName} = formData.getValue()
+        addSubject(subjectName, teacherName);
+        
+    }
+
     return (
-        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'black'}}>
-            <View style={{margin: 10, backgroundColor: '#fff', padding: 10, boxSizing: 'border-box', height: '100vh'}}>
-                <Text>Nombre de la asignatura</Text>
-                <TextInput value="Hol sdlksdklkdsl" />
-                <Text>Nombre del profesor</Text>
-                <TextInput value="Hol sdlksdklkdsl" />
-                <View style={{display: "flex", justifyContent: 'flex-end', flexDirection: 'row'}}>
-                    <Button onPress={onClose} title="Cancelar" />
-                    <Button title="Añadir" onPress={() => null} />
-                </View>
-            </View>
+        <View>
+            <Form options={options} ref={c => formData = c} type={Subject} />
+            <Button title="Añadir" onPress={handleSubmit} />
         </View>
     )
 }
 
-export default connect()(EditorSubject)
+export default connect(
+    () => ({}),
+    dispatch => ({
+        addSubject(subjectName, teacherName) {
+            dispatch(addSubjectActionCreator({subjectName, teacherName}))
+        }
+    })
+)(EditorSubjectScreen)
